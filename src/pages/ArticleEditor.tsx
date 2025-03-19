@@ -197,7 +197,7 @@ const ArticleEditor = () => {
                 
                 <div>
                   <Label htmlFor="excerpt" className="text-base font-medium mb-2 block">
-                    Resumo <span className="text-red-500">*</span>
+                    Resumo/Subtítulo <span className="text-red-500">*</span>
                   </Label>
                   <Textarea
                     id="excerpt"
@@ -212,7 +212,7 @@ const ArticleEditor = () => {
                 
                 <div>
                   <Label className="text-base font-medium mb-2 block">
-                    Conteúdo <span className="text-red-500">*</span>
+                    Lide e Corpo do texto <span className="text-red-500">*</span>
                   </Label>
                   <RichTextEditor
                     value={content}

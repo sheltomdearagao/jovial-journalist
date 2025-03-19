@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Bell, Search } from 'lucide-react';
+import { Menu, X, ChevronDown, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
 
@@ -36,8 +36,8 @@ const Navbar = () => {
       className={cn(
         'fixed top-0 left-0 w-full z-50 transition-all duration-300',
         isScrolled 
-          ? 'bg-white shadow-md py-2' 
-          : 'bg-transparent py-4'
+          ? 'bg-white/70 backdrop-blur-md shadow-md py-2' 
+          : 'bg-white/70 backdrop-blur-md py-4'
       )}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
@@ -70,12 +70,6 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center space-x-2">
           <Button variant="ghost" size="icon" className="text-gray-600">
             <Search className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-gray-600">
-            <Bell className="h-5 w-5" />
-          </Button>
-          <Button variant="default" asChild className="bg-journal-blue hover:bg-journal-darkBlue">
-            <Link to="/redacao">Portal da Redação</Link>
           </Button>
         </div>
 
@@ -119,11 +113,6 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <div className="pt-2 border-t border-gray-200">
-            <Button asChild className="w-full bg-journal-blue hover:bg-journal-darkBlue">
-              <Link to="/redacao" onClick={closeMenu}>Portal da Redação</Link>
-            </Button>
-          </div>
         </div>
       </div>
     </nav>

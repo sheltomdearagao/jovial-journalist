@@ -30,13 +30,19 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/materia/:id" element={<ArticleView />} />
 
-            {/* Rotas de seções temáticas - implementar posteriormente */}
-            <Route path="/noticias" element={<Index />} />
-            <Route path="/reportagens" element={<Index />} />
-            <Route path="/entrevistas" element={<Index />} />
-            <Route path="/curiosidades" element={<Index />} />
-            <Route path="/entretenimento" element={<Index />} />
-            <Route path="/opiniao" element={<Index />} />
+            {/* Rotas de seções temáticas dinâmicas */}
+            <Route path="/noticias" element={<Index key="noticias" />} />
+            <Route path="/reportagens" element={<Index key="reportagens" />} />
+            <Route path="/entrevistas" element={<Index key="entrevistas" />} />
+            <Route path="/curiosidades" element={<Index key="curiosidades" />} />
+            <Route path="/entretenimento" element={<Index key="entretenimento" />} />
+            <Route path="/opiniao" element={<Index key="opiniao" />} />
+            <Route path="/esportes" element={<Index key="esportes" />} />
+            <Route path="/cultura" element={<Index key="cultura" />} />
+            <Route path="/ciencia" element={<Index key="ciencia" />} />
+            <Route path="/tecnologia" element={<Index key="tecnologia" />} />
+            <Route path="/meio-ambiente" element={<Index key="meio-ambiente" />} />
+            <Route path="/eventos" element={<Index key="eventos" />} />
             
             {/* Páginas protegidas - área de redação */}
             <Route

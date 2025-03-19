@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -51,7 +52,6 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><Link to="/sobre" className="text-gray-300 hover:text-white transition-colors">Sobre Nós</Link></li>
               <li><Link to="/equipe" className="text-gray-300 hover:text-white transition-colors">Nossa Equipe</Link></li>
-              <li><Link to="/redacao" className="text-gray-300 hover:text-white transition-colors">Portal da Redação</Link></li>
               <li><Link to="/contato" className="text-gray-300 hover:text-white transition-colors">Contato</Link></li>
               <li><Link to="/privacidade" className="text-gray-300 hover:text-white transition-colors">Política de Privacidade</Link></li>
             </ul>
@@ -76,6 +76,14 @@ const Footer = () => {
                 <a href="tel:+557132123456" className="text-gray-300 hover:text-white transition-colors">
                   (71) 3212-3456
                 </a>
+              </li>
+              <li className="flex items-center mt-4">
+                <Button asChild variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Link to="/login" className="flex items-center justify-center">
+                    <Lock className="mr-2 h-4 w-4" />
+                    Área Restrita
+                  </Link>
+                </Button>
               </li>
             </ul>
           </div>

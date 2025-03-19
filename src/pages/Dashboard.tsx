@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  PlusCircle, FileText, Users, Settings, LogOut, 
-  Bell, Search, Mail, ChevronDown, Menu, Home
+  PlusCircle, FileText, Settings, LogOut, 
+  Search, Mail, ChevronDown, Menu, Home
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -123,6 +123,21 @@ const Dashboard = () => {
     }
   };
 
+  const categories = [
+    'Notícias',
+    'Reportagens',
+    'Entrevistas',
+    'Curiosidades',
+    'Entretenimento',
+    'Opinião',
+    'Esportes',
+    'Cultura',
+    'Ciência',
+    'Tecnologia',
+    'Meio Ambiente',
+    'Eventos',
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
@@ -154,19 +169,26 @@ const Dashboard = () => {
             Nova Matéria
           </Link>
           
-          {user?.role === 'admin' && (
-            <Link
-              to="/redacao/usuarios"
-              className="flex items-center px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
-            >
-              <Users className="mr-3 h-5 w-5" />
-              Usuários
-            </Link>
-          )}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              Categorias
+            </h3>
+            <div className="space-y-1 max-h-48 overflow-y-auto">
+              {categories.map((cat) => (
+                <a
+                  key={cat}
+                  href="#"
+                  className="flex items-center px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+                >
+                  {cat}
+                </a>
+              ))}
+            </div>
+          </div>
           
           <Link
             to="/redacao/configuracoes"
-            className="flex items-center px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+            className="flex items-center px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors mt-4"
           >
             <Settings className="mr-3 h-5 w-5" />
             Configurações
@@ -210,10 +232,6 @@ const Dashboard = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button variant="ghost" size="icon" className="text-gray-600">
-                <Bell className="h-5 w-5" />
-              </Button>
-              
               <Button variant="ghost" size="icon" className="text-gray-600">
                 <Mail className="h-5 w-5" />
               </Button>
@@ -264,7 +282,7 @@ const Dashboard = () => {
               </p>
             </div>
             
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant={filter === 'all' ? 'default' : 'outline'}
                 onClick={() => setFilter('all')}

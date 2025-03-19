@@ -58,7 +58,7 @@ const NewsletterSubscribe = () => {
           <Mail className="h-6 w-6 text-white" />
         </div>
         <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
-          Receba nossas novidades!
+          Fique sempre por dentro
         </h3>
         <p className="text-white/80 mb-6 max-w-md">
           Inscreva-se na nossa newsletter e receba as últimas notícias e atualizações do Nono Informa.
