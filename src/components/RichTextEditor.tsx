@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,6 +18,11 @@ interface RichTextEditorProps {
 const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }: RichTextEditorProps) => {
   const [tab, setTab] = useState<string>('editar');
   const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [isEmpty, setIsEmpty] = useState(value === '');
+
+  useEffect(() => {
+    setIsEmpty(value === '');
+  }, [value]);
 
   // Esta é uma implementação simplificada. Em uma aplicação real,
   // você usaria uma biblioteca como Quill, TinyMCE, Draft.js, etc.
@@ -35,6 +40,12 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
   const handlePreviewTab = () => {
     setPreviewHtml(value);
     setTab('preview');
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const content = e.currentTarget.innerHTML;
+    onChange(content);
+    setIsEmpty(content === '' || content === '<br>');
   };
 
   return (
@@ -216,13 +227,19 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
               <Redo className="h-4 w-4" />
             </Button>
           </div>
-          <div
-            className="editor-content min-h-[400px] p-4 overflow-auto focus:outline-none"
-            contentEditable
-            dangerouslySetInnerHTML={{ __html: value }}
-            onInput={(e) => onChange(e.currentTarget.innerHTML)}
-            placeholder={placeholder}
-          />
+          <div className="relative min-h-[400px]">
+            <div
+              className="editor-content w-full min-h-[400px] p-4 overflow-auto focus:outline-none"
+              contentEditable={true}
+              dangerouslySetInnerHTML={{ __html: value }}
+              onInput={handleInput}
+            />
+            {isEmpty && (
+              <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
+                {placeholder}
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="preview" className="mt-0 min-h-[400px] p-4 prose max-w-none">
