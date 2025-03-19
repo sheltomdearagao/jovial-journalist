@@ -117,8 +117,36 @@ export default {
 				sans: ['Inter', 'sans-serif'],
 				display: ['Playfair Display', 'serif'],
 				heading: ['Montserrat', 'sans-serif']
-			}
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						maxWidth: 'none',
+						color: 'inherit',
+						a: {
+							color: 'hsl(var(--primary))',
+							'&:hover': {
+								color: 'hsl(var(--primary))',
+							},
+							textDecoration: 'underline',
+							fontWeight: '500',
+						},
+						h1: {
+							color: 'hsl(var(--primary))',
+						},
+						h2: {
+							color: 'hsl(var(--primary))',
+						},
+						h3: {
+							color: 'hsl(var(--primary))',
+						},
+					},
+				},
+			},
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("@tailwindcss/typography")
+	],
 } satisfies Config;
