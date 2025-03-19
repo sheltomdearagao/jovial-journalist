@@ -17,6 +17,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/RichTextEditor';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const ArticleEditor = () => {
   const { id } = useParams();
@@ -32,6 +33,7 @@ const ArticleEditor = () => {
   const [category, setCategory] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [status, setStatus] = useState('draft');
+  const [isFeatured, setIsFeatured] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -63,6 +65,7 @@ const ArticleEditor = () => {
         setCategory('Notícias');
         setCoverImage('https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80');
         setStatus('published');
+        setIsFeatured(true);
         setIsLoading(false);
       }, 1000);
     }
@@ -293,6 +296,17 @@ const ArticleEditor = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="featured" 
+                    checked={isFeatured}
+                    onCheckedChange={(checked) => setIsFeatured(checked as boolean)} 
+                  />
+                  <Label htmlFor="featured" className="text-sm font-medium cursor-pointer">
+                    Destaque na página inicial
+                  </Label>
                 </div>
                 
                 <div>

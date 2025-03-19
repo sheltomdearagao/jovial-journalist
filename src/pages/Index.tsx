@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -174,17 +175,26 @@ const mockSchoolEvents = [
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [expandedCuriosity, setExpandedCuriosity] = useState<string | null>(null);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
 
   useEffect(() => {
     setIsLoaded(true);
+    
+    // Setup rotation for featured articles
+    const featuredInterval = setInterval(() => {
+      setFeaturedIndex(prev => (prev + 1) % mockFeaturedArticles.length);
+    }, 5000); // Change featured article every 5 seconds
+    
+    return () => clearInterval(featuredInterval);
   }, []);
 
   const heroStyle = {
     backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(https://images.unsplash.com/photo-1519452575417-564c1401ecc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '85vh',
-    maxHeight: '600px'
+    // Reduced height by 20% from the original
+    height: '68vh',  // Originally was 85vh, reduced by 20%
+    maxHeight: '480px'  // Originally was 600px, reduced by 20%
   };
 
   const toggleCuriosity = (id: string) => {
@@ -194,6 +204,13 @@ const Index = () => {
       setExpandedCuriosity(id);
     }
   };
+
+  // Get the 3 most recent school events (in a real app, this would use actual dates)
+  const recentSchoolEvents = mockSchoolEvents.sort((a, b) => {
+    // In a real app, you would parse dates and compare them
+    // For mock data, we're using the first 3 events as they're already sorted
+    return 0;
+  }).slice(0, 3);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -232,7 +249,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mockSchoolEvents.map((event, index) => (
+            {recentSchoolEvents.map((event, index) => (
               <div key={event.id} 
                 className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 
                 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} 
@@ -289,26 +306,26 @@ const Index = () => {
               {mockFeaturedArticles.length > 0 && (
                 <div className={`relative overflow-hidden rounded-xl h-full min-h-[300px] shadow-lg ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
                   <img 
-                    src={mockFeaturedArticles[0].coverImage} 
-                    alt={mockFeaturedArticles[0].title} 
+                    src={mockFeaturedArticles[featuredIndex].coverImage} 
+                    alt={mockFeaturedArticles[featuredIndex].title} 
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 p-6 w-full">
                     <span className="inline-block bg-journal-yellow text-gray-900 text-xs font-medium px-2.5 py-0.5 rounded mb-2">
-                      {mockFeaturedArticles[0].category}
+                      {mockFeaturedArticles[featuredIndex].category}
                     </span>
                     <h3 className="text-white font-bold text-xl md:text-2xl mb-2">
-                      <Link to={`/materia/${mockFeaturedArticles[0].id}`}>
-                        {mockFeaturedArticles[0].title}
+                      <Link to={`/materia/${mockFeaturedArticles[featuredIndex].id}`}>
+                        {mockFeaturedArticles[featuredIndex].title}
                       </Link>
                     </h3>
                     <p className="text-white/80 line-clamp-2 mb-4">
-                      {mockFeaturedArticles[0].excerpt}
+                      {mockFeaturedArticles[featuredIndex].excerpt}
                     </p>
                     <div className="flex items-center text-white/70 text-sm">
                       <Calendar className="h-4 w-4 mr-1" />
-                      <span>{mockFeaturedArticles[0].date}</span>
+                      <span>{mockFeaturedArticles[featuredIndex].date}</span>
                     </div>
                   </div>
                 </div>
@@ -316,7 +333,10 @@ const Index = () => {
             </div>
             
             <div className="md:col-span-6 lg:col-span-4 grid grid-cols-1 gap-6">
-              {mockFeaturedArticles.slice(1, 3).map((article, index) => (
+              {mockFeaturedArticles
+                .filter((_, index) => index !== featuredIndex)
+                .slice(0, 2)
+                .map((article, index) => (
                 <div key={article.id} 
                   className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 
                   ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} 
@@ -518,4 +538,3 @@ const Index = () => {
 };
 
 export default Index;
-
