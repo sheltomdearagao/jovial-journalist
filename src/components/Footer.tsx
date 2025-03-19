@@ -17,6 +17,9 @@ const Footer = () => {
             <p className="text-gray-300 mb-4">
               O jornal escolar da Escola Medalha Milagrosa. Produzido por alunos e professores para informar, entreter e inspirar nossa comunidade.
             </p>
+            <p className="text-gray-300 mb-4">
+              Orientado pelo Professor Sheltom de Aragão.
+            </p>
             <div className="flex space-x-3">
               <a href="#" className="text-white hover:text-journal-yellow transition-colors" aria-label="Facebook">
                 <Facebook size={20} />
@@ -78,7 +81,10 @@ const Footer = () => {
                 </a>
               </li>
               <li className="flex items-center mt-4">
-                <Button asChild variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                <Button asChild variant="outline" 
+                  className="w-auto text-black border-transparent bg-white/15 hover:bg-white/25"
+                  style={{ transform: 'scale(0.7)', transformOrigin: 'left' }}
+                >
                   <Link to="/login" className="flex items-center justify-center">
                     <Lock className="mr-2 h-4 w-4" />
                     Área Restrita

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -172,6 +173,7 @@ const mockSchoolEvents = [
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [expandedCuriosity, setExpandedCuriosity] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -181,6 +183,17 @@ const Index = () => {
     backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(https://images.unsplash.com/photo-1519452575417-564c1401ecc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    // Reducing hero height by 15%
+    height: '85vh',
+    maxHeight: '600px'
+  };
+
+  const toggleCuriosity = (id: string) => {
+    if (expandedCuriosity === id) {
+      setExpandedCuriosity(null);
+    } else {
+      setExpandedCuriosity(id);
+    }
   };
 
   return (
@@ -188,25 +201,17 @@ const Index = () => {
       <Navbar />
       
       <section 
-        className="pt-28 pb-16 md:pt-40 md:pb-24 text-white" 
+        className="flex items-center justify-center text-white" 
         style={heroStyle}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-display ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
-              Nono <span className="text-journal-yellow">Informa</span>
+            <h1 className={`font-bold mb-6 font-display ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} style={{ fontSize: 'calc(3.75rem * 1.15)' }}>
+              <span className="text-journal-blue">Nono</span> <span className="text-journal-yellow">Informa</span>
             </h1>
-            <p className={`text-xl md:text-2xl mb-8 text-white/90 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`}>
-              O jornal da Escola Medalha Milagrosa - Salvador
+            <p className={`text-xl md:text-2xl text-white/90 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`}>
+              O jornal da Escola Medalha Milagrosa
             </p>
-            <div className={`flex flex-wrap justify-center gap-4 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
-              <Button asChild size="lg" className="bg-journal-blue hover:bg-journal-darkBlue">
-                <Link to="/noticias">Últimas Notícias</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10">
-                <a href="#newsletter">Assinar Newsletter</a>
-              </Button>
-            </div>
           </div>
         </div>
       </section>
@@ -438,13 +443,68 @@ const Index = () => {
         className="bg-gray-50"
       />
       
-      <CategorySection
-        title="Curiosidades"
-        subtitle="Descobertas interessantes do mundo do conhecimento"
-        articles={mockCuriosityArticles}
-        categoryLink="/curiosidades"
-        layout="list"
-      />
+      {/* Redesigned Curiosities Section with Grid Layout */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Curiosidades</h2>
+              <p className="text-gray-600">Descobertas interessantes do mundo do conhecimento</p>
+            </div>
+            <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
+              <Link to="/curiosidades" className="flex items-center">
+                Ver todas
+                <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {mockCuriosityArticles.map((article) => (
+              <div 
+                key={article.id}
+                className={cn(
+                  "transition-all duration-300 overflow-hidden rounded-xl cursor-pointer shadow-md hover:shadow-lg",
+                  expandedCuriosity === article.id ? "col-span-2 row-span-2" : ""
+                )}
+                onClick={() => toggleCuriosity(article.id)}
+              >
+                <div className="relative h-full">
+                  <img 
+                    src={article.coverImage} 
+                    alt={article.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3">
+                    <div className="flex flex-col h-full justify-end">
+                      <h3 className="text-white font-bold text-sm md:text-base mb-1">
+                        {article.title}
+                      </h3>
+                      {expandedCuriosity === article.id && (
+                        <div className="animate-fade-in">
+                          <p className="text-white/90 text-xs md:text-sm mb-2">
+                            {article.excerpt}
+                          </p>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            asChild 
+                            className="mt-2 bg-white/20 backdrop-blur-sm text-white border-white/40 hover:bg-white/30"
+                          >
+                            <Link to={`/materia/${article.id}`}>
+                              Ler mais
+                            </Link>
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       
       <section id="newsletter" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
