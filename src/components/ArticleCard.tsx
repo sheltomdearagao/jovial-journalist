@@ -1,0 +1,121 @@
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface ArticleCardProps {
+  id: string;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  category: string;
+  author: string;
+  date: string;
+  className?: string;
+  featured?: boolean;
+  minimal?: boolean;
+}
+
+const ArticleCard = ({
+  id,
+  title,
+  excerpt,
+  coverImage,
+  category,
+  author,
+  date,
+  className,
+  featured = false,
+  minimal = false,
+}: ArticleCardProps) => {
+  if (minimal) {
+    return (
+      <div className={cn('news-card', className)}>
+        <Link to={`/materia/${id}`} className="flex flex-row h-full">
+          <div className="w-1/3 overflow-hidden">
+            <img
+              src={coverImage}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-300"
+            />
+          </div>
+          <div className="w-2/3 p-4">
+            <Badge className="mb-2 bg-journal-yellow text-gray-800 hover:bg-journal-lightYellow">
+              {category}
+            </Badge>
+            <h3 className="font-bold text-gray-900 mb-1 line-clamp-2">{title}</h3>
+            <div className="flex items-center text-xs text-gray-500">
+              <Calendar className="h-3 w-3 mr-1" />
+              <span>{date}</span>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+  if (featured) {
+    return (
+      <div className={cn('relative overflow-hidden rounded-xl group h-full', className)}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/10 z-10" />
+        <img
+          src={coverImage}
+          alt={title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+          <Badge className="mb-3 bg-journal-yellow text-gray-800 hover:bg-journal-lightYellow">
+            {category}
+          </Badge>
+          <Link to={`/materia/${id}`}>
+            <h2 className="text-white text-2xl md:text-3xl font-bold mb-3 line-clamp-3 hover:text-journal-lightYellow transition-colors">
+              {title}
+            </h2>
+          </Link>
+          <p className="text-gray-200 mb-4 line-clamp-2">{excerpt}</p>
+          <div className="flex items-center text-white/70 text-sm">
+            <User className="h-4 w-4 mr-1" />
+            <span className="mr-3">{author}</span>
+            <Calendar className="h-4 w-4 mr-1" />
+            <span>{date}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn('news-card h-full flex flex-col', className)}>
+      <div className="relative overflow-hidden">
+        <Link to={`/materia/${id}`}>
+          <img
+            src={coverImage}
+            alt={title}
+            className="w-full h-60 object-cover transition-transform duration-300"
+          />
+        </Link>
+      </div>
+      <div className="p-5 flex-grow flex flex-col">
+        <Badge className="self-start mb-2 bg-journal-yellow text-gray-800 hover:bg-journal-lightYellow">
+          {category}
+        </Badge>
+        <Link to={`/materia/${id}`}>
+          <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+            {title}
+          </h3>
+        </Link>
+        <p className="text-gray-600 mb-4 line-clamp-3 flex-grow">{excerpt}</p>
+        <div className="flex items-center text-sm text-gray-500 mt-auto pt-4 border-t border-gray-100">
+          <User className="h-4 w-4 mr-1" />
+          <span className="mr-3">{author}</span>
+          <Calendar className="h-4 w-4 mr-1" />
+          <span>{date}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ArticleCard;
