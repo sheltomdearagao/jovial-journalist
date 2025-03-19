@@ -84,7 +84,7 @@ const NewsletterSubscribe = () => {
               ) : success ? (
                 <CheckCircle className="mr-2 h-4 w-4" />
               ) : null}
-              {loading ? "Enviando..." : success ? "Inscrito!" : "Inscrever-se"}
+              {loading ? "Enviando..." : success ? "Inscrito!" : "Fique sempre por dentro"}
             </Button>
           </div>
         </form>

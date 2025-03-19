@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,10 +5,9 @@ import ArticleCard from '@/components/ArticleCard';
 import CategorySection from '@/components/CategorySection';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Clock, Calendar, ArrowRight, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Mock data
 const mockFeaturedArticles = [
   {
     id: '1',
@@ -142,6 +140,36 @@ const mockCuriosityArticles = [
   }
 ];
 
+const mockSchoolEvents = [
+  {
+    id: '20',
+    title: 'Semana da Matemática começa na próxima segunda',
+    excerpt: 'Série de atividades vai estimular o raciocínio lógico de forma divertida.',
+    coverImage: 'https://images.unsplash.com/photo-1596495577886-d920f1fb7238?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+    category: 'Eventos',
+    author: 'Coordenação Pedagógica',
+    date: '18 de maio de 2023'
+  },
+  {
+    id: '21',
+    title: 'Novo uniforme é apresentado à comunidade escolar',
+    excerpt: 'Design moderno foi escolhido em votação com participação de alunos e professores.',
+    coverImage: 'https://images.unsplash.com/photo-1604671801908-6f0c6a092c05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+    category: 'Notícias',
+    author: 'Direção Escolar',
+    date: '14 de maio de 2023'
+  },
+  {
+    id: '22',
+    title: 'Campanha de arrecadação de livros bate recorde',
+    excerpt: 'Mais de 500 exemplares serão doados para bibliotecas comunitárias.',
+    coverImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1128&q=80',
+    category: 'Ação Social',
+    author: 'Grêmio Estudantil',
+    date: '10 de maio de 2023'
+  }
+];
+
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -159,7 +187,6 @@ const Index = () => {
     <main className="min-h-screen flex flex-col">
       <Navbar />
       
-      {/* Hero Section */}
       <section 
         className="pt-28 pb-16 md:pt-40 md:pb-24 text-white" 
         style={heroStyle}
@@ -184,17 +211,148 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Articles */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 bg-gradient-to-br from-journal-blue/5 to-journal-lightBlue/10">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Destaques</h2>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <div className="bg-journal-blue/10 p-2 rounded-full">
+                <TrendingUp className="h-6 w-6 text-journal-blue" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Tá rolando na Escola</h2>
+            </div>
+            <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
+              <Link to="/eventos" className="flex items-center gap-1">
+                Ver tudo <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mockFeaturedArticles.map((article, index) => (
-              <div key={article.id} className={`${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} style={{animationDelay: `${0.1 * (index + 1)}s`}}>
-                <ArticleCard {...article} />
+            {mockSchoolEvents.map((event, index) => (
+              <div key={event.id} 
+                className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 
+                ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} 
+                style={{animationDelay: `${0.1 * (index + 1)}s`}}
+              >
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={event.coverImage} 
+                    alt={event.title} 
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="bg-journal-yellow/10 text-journal-darkBlue text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      {event.category}
+                    </span>
+                    <div className="flex items-center text-gray-500 text-xs">
+                      <Clock className="h-3 w-3 mr-1" />
+                      <span>{event.date}</span>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-lg mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+                    <Link to={`/materia/${event.id}`}>
+                      {event.title}
+                    </Link>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {event.excerpt}
+                  </p>
+                  <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
+                    <Link to={`/materia/${event.id}`} className="flex items-center gap-1">
+                      Ler mais <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+      
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Destaques</h2>
+              <div className="h-1 w-16 bg-gradient-to-r from-journal-yellow to-journal-lightYellow rounded-full ml-2"></div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="md:col-span-6 lg:col-span-8">
+              {mockFeaturedArticles.length > 0 && (
+                <div className={`relative overflow-hidden rounded-xl h-full min-h-[300px] shadow-lg ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
+                  <img 
+                    src={mockFeaturedArticles[0].coverImage} 
+                    alt={mockFeaturedArticles[0].title} 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6 w-full">
+                    <span className="inline-block bg-journal-yellow text-gray-900 text-xs font-medium px-2.5 py-0.5 rounded mb-2">
+                      {mockFeaturedArticles[0].category}
+                    </span>
+                    <h3 className="text-white font-bold text-xl md:text-2xl mb-2">
+                      <Link to={`/materia/${mockFeaturedArticles[0].id}`}>
+                        {mockFeaturedArticles[0].title}
+                      </Link>
+                    </h3>
+                    <p className="text-white/80 line-clamp-2 mb-4">
+                      {mockFeaturedArticles[0].excerpt}
+                    </p>
+                    <div className="flex items-center text-white/70 text-sm">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      <span>{mockFeaturedArticles[0].date}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="md:col-span-6 lg:col-span-4 grid grid-cols-1 gap-6">
+              {mockFeaturedArticles.slice(1, 3).map((article, index) => (
+                <div key={article.id} 
+                  className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 
+                  ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} 
+                  style={{animationDelay: `${0.1 * (index + 1)}s`}}
+                >
+                  <div className="flex h-full flex-col">
+                    <div className="h-36 overflow-hidden">
+                      <img 
+                        src={article.coverImage} 
+                        alt={article.title} 
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <span className="text-xs font-medium text-journal-blue mb-1">
+                        {article.category}
+                      </span>
+                      <h3 className="font-bold text-md mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+                        <Link to={`/materia/${article.id}`}>
+                          {article.title}
+                        </Link>
+                      </h3>
+                      <p className="text-gray-600 text-xs mb-2 line-clamp-2 flex-grow">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <span className="text-gray-500 text-sm">{article.date}</span>
+                        <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
+                          <Link to={`/materia/${article.id}`} className="flex items-center gap-1">
+                            Ler <ChevronRight className="h-3 w-3" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
           <div className="text-center mt-10">
             <Button asChild variant="outline" className="group">
               <Link to="/noticias" className="inline-flex items-center">
@@ -206,43 +364,89 @@ const Index = () => {
         </div>
       </section>
       
-      {/* News Section */}
       <CategorySection
         title="Notícias"
         subtitle="Fique por dentro do que acontece na nossa escola"
         articles={mockNewsArticles}
         categoryLink="/noticias"
-      />
-      
-      {/* Interviews Section */}
-      <CategorySection
-        title="Entrevistas"
-        subtitle="Conversas com pessoas inspiradoras da nossa comunidade"
-        articles={mockInterviewArticles}
-        categoryLink="/entrevistas"
         className="bg-gray-50"
       />
       
-      {/* Entertainment Section */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Entrevistas</h2>
+              <p className="text-gray-600">Conversas com pessoas inspiradoras da nossa comunidade</p>
+            </div>
+            <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
+              <Link to="/entrevistas" className="flex items-center">
+                Ver todas
+                <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {mockInterviewArticles.map((article, index) => (
+              <div key={article.id} 
+                className={`flex flex-col md:flex-row gap-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-4 
+                ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} 
+                style={{animationDelay: `${0.1 * (index + 1)}s`}}
+              >
+                <div className="w-full md:w-2/5 h-48 md:h-auto overflow-hidden rounded-lg">
+                  <img 
+                    src={article.coverImage} 
+                    alt={article.title} 
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="w-full md:w-3/5 flex flex-col justify-between">
+                  <div>
+                    <span className="inline-block bg-journal-blue/10 text-journal-blue text-xs font-medium px-2.5 py-0.5 rounded mb-2">
+                      {article.category}
+                    </span>
+                    <h3 className="font-bold text-xl mb-2 hover:text-journal-blue transition-colors">
+                      <Link to={`/materia/${article.id}`}>
+                        {article.title}
+                      </Link>
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {article.excerpt}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-gray-500 text-sm">{article.date}</span>
+                    <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10">
+                      <Link to={`/materia/${article.id}`} className="flex items-center gap-1">
+                        Ler entrevista <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
       <CategorySection
         title="Entretenimento"
         subtitle="Diversão e cultura para todos os gostos"
         articles={mockEntertainmentArticles}
         categoryLink="/entretenimento"
+        className="bg-gray-50"
       />
       
-      {/* Curiosities Section */}
       <CategorySection
         title="Curiosidades"
         subtitle="Descobertas interessantes do mundo do conhecimento"
         articles={mockCuriosityArticles}
         categoryLink="/curiosidades"
-        className="bg-gray-50"
         layout="list"
       />
       
-      {/* Newsletter Section */}
-      <section id="newsletter" className="py-16">
+      <section id="newsletter" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <NewsletterSubscribe />
