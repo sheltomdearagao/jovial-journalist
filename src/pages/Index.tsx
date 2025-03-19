@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,6 +7,7 @@ import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Clock, Calendar, ArrowRight, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 const mockFeaturedArticles = [
   {
@@ -183,7 +183,6 @@ const Index = () => {
     backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(https://images.unsplash.com/photo-1519452575417-564c1401ecc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    // Reducing hero height by 15%
     height: '85vh',
     maxHeight: '600px'
   };
@@ -443,7 +442,6 @@ const Index = () => {
         className="bg-gray-50"
       />
       
-      {/* Redesigned Curiosities Section with Grid Layout */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
@@ -520,3 +518,4 @@ const Index = () => {
 };
 
 export default Index;
+
