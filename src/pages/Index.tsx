@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,9 +5,17 @@ import ArticleCard from '@/components/ArticleCard';
 import CategorySection from '@/components/CategorySection';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Clock, Calendar, ArrowRight, TrendingUp } from 'lucide-react';
+import { ChevronRight, Clock, Calendar, ArrowRight, TrendingUp, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from '@/components/ui/carousel';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const mockFeaturedArticles = [
   {
@@ -176,6 +183,48 @@ const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [expandedCuriosity, setExpandedCuriosity] = useState<string | null>(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const isMobile = useIsMobile();
+
+  // Mock curiosity articles expanded with more items for carousel
+  const mockCuriosityArticlesExpanded = [
+    ...mockCuriosityArticles,
+    {
+      id: '14',
+      title: 'Como funciona a fibra óptica?',
+      excerpt: 'Tecnologia que transmite dados através da luz explica aulas de física na prática.',
+      coverImage: 'https://images.unsplash.com/photo-1545696648-86c761bc5410?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      category: 'Tecnologia',
+      author: 'Marcos Santos',
+      date: '10 de abril de 2023'
+    },
+    {
+      id: '15',
+      title: 'Por que o céu é azul durante o dia e vermelho no pôr do sol?',
+      excerpt: 'Fenômeno da dispersão da luz explica mudanças de cores no céu.',
+      coverImage: 'https://images.unsplash.com/photo-1500534623283-312aebe2eec3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      category: 'Ciência',
+      author: 'Julia Costa',
+      date: '8 de abril de 2023'
+    },
+    {
+      id: '16',
+      title: 'Como são feitos os lápis de cor?',
+      excerpt: 'Processo de fabricação dos materiais escolares mais populares entre crianças.',
+      coverImage: 'https://images.unsplash.com/photo-1522075782449-e45a34f1ddfb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      category: 'Curiosidades',
+      author: 'Renata Lima',
+      date: '5 de abril de 2023'
+    },
+    {
+      id: '17',
+      title: 'Os animais também sonham?',
+      excerpt: 'Descobertas científicas recentes sobre o sono dos animais surpreendem.',
+      coverImage: 'https://images.unsplash.com/photo-1517849985205-5e319db3f8ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      category: 'Ciência',
+      author: 'Paulo Oliveira',
+      date: '2 de abril de 2023'
+    }
+  ];
 
   useEffect(() => {
     setIsLoaded(true);
@@ -192,9 +241,9 @@ const Index = () => {
     backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(https://images.unsplash.com/photo-1519452575417-564c1401ecc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    // Reduced height by 20% from the original
-    height: '68vh',  // Originally was 85vh, reduced by 20%
-    maxHeight: '480px'  // Originally was 600px, reduced by 20%
+    // Reduced height by an additional 20%
+    height: '54vh',  // Previously 68vh, reduced by 20%
+    maxHeight: '384px'  // Previously 480px, reduced by 20%
   };
 
   const toggleCuriosity = (id: string) => {
@@ -222,24 +271,24 @@ const Index = () => {
       >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className={`font-bold mb-6 font-display ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} style={{ fontSize: 'calc(3.75rem * 1.15)' }}>
+            <h1 className={`font-bold mb-4 md:mb-6 font-display ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} style={{ fontSize: 'calc(3.75rem * 1.15 * 1.15)' }}>
               <span className="text-journal-blue">Nono</span> <span className="text-journal-yellow">Informa</span>
             </h1>
-            <p className={`text-xl md:text-2xl text-white/90 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`}>
+            <p className={`text-lg md:text-2xl text-white/90 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`}>
               O jornal da Escola Medalha Milagrosa
             </p>
           </div>
         </div>
       </section>
       
-      <section className="py-12 bg-gradient-to-br from-journal-blue/5 to-journal-lightBlue/10">
+      <section className="py-8 md:py-12 bg-gradient-to-br from-journal-blue/5 to-journal-lightBlue/10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex items-center gap-2">
               <div className="bg-journal-blue/10 p-2 rounded-full">
-                <TrendingUp className="h-6 w-6 text-journal-blue" />
+                <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-journal-blue" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Tá rolando na Escola</h2>
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900">Tá rolando na Escola</h2>
             </div>
             <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
               <Link to="/eventos" className="flex items-center gap-1">
@@ -248,23 +297,23 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {recentSchoolEvents.map((event, index) => (
               <div key={event.id} 
                 className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 
                 ${isLoaded ? 'animate-slide-up' : 'opacity-0'}`} 
                 style={{animationDelay: `${0.1 * (index + 1)}s`}}
               >
-                <div className="h-48 overflow-hidden">
+                <div className="h-40 md:h-48 overflow-hidden">
                   <img 
                     src={event.coverImage} 
                     alt={event.title} 
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-4 md:p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-journal-yellow/10 text-journal-darkBlue text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span className="bg-journal-yellow/10 text-journal-darkBlue text-xs font-medium px-2 py-0.5 rounded-full">
                       {event.category}
                     </span>
                     <div className="flex items-center text-gray-500 text-xs">
@@ -272,12 +321,12 @@ const Index = () => {
                       <span>{event.date}</span>
                     </div>
                   </div>
-                  <h3 className="font-bold text-lg mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+                  <h3 className="font-bold text-base md:text-lg mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
                     <Link to={`/materia/${event.id}`}>
                       {event.title}
                     </Link>
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 text-xs md:text-sm mb-3 line-clamp-2">
                     {event.excerpt}
                   </p>
                   <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
@@ -292,39 +341,39 @@ const Index = () => {
         </div>
       </section>
       
-      <section className="py-16 bg-white">
+      <section className="py-10 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Destaques</h2>
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900">Destaques</h2>
               <div className="h-1 w-16 bg-gradient-to-r from-journal-yellow to-journal-lightYellow rounded-full ml-2"></div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
             <div className="md:col-span-6 lg:col-span-8">
               {mockFeaturedArticles.length > 0 && (
-                <div className={`relative overflow-hidden rounded-xl h-full min-h-[300px] shadow-lg ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
+                <div className={`relative overflow-hidden rounded-xl h-64 md:h-full min-h-[200px] md:min-h-[300px] shadow-lg ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
                   <img 
                     src={mockFeaturedArticles[featuredIndex].coverImage} 
                     alt={mockFeaturedArticles[featuredIndex].title} 
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">
                     <span className="inline-block bg-journal-yellow text-gray-900 text-xs font-medium px-2.5 py-0.5 rounded mb-2">
                       {mockFeaturedArticles[featuredIndex].category}
                     </span>
-                    <h3 className="text-white font-bold text-xl md:text-2xl mb-2">
+                    <h3 className="text-white font-bold text-lg md:text-2xl mb-2">
                       <Link to={`/materia/${mockFeaturedArticles[featuredIndex].id}`}>
                         {mockFeaturedArticles[featuredIndex].title}
                       </Link>
                     </h3>
-                    <p className="text-white/80 line-clamp-2 mb-4">
+                    <p className="text-white/80 text-sm md:text-base line-clamp-2 mb-2 md:mb-4">
                       {mockFeaturedArticles[featuredIndex].excerpt}
                     </p>
-                    <div className="flex items-center text-white/70 text-sm">
-                      <Calendar className="h-4 w-4 mr-1" />
+                    <div className="flex items-center text-white/70 text-xs md:text-sm">
+                      <Calendar className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                       <span>{mockFeaturedArticles[featuredIndex].date}</span>
                     </div>
                   </div>
@@ -332,7 +381,7 @@ const Index = () => {
               )}
             </div>
             
-            <div className="md:col-span-6 lg:col-span-4 grid grid-cols-1 gap-6">
+            <div className="md:col-span-6 lg:col-span-4 grid grid-cols-1 gap-4 md:gap-6">
               {mockFeaturedArticles
                 .filter((_, index) => index !== featuredIndex)
                 .slice(0, 2)
@@ -343,18 +392,18 @@ const Index = () => {
                   style={{animationDelay: `${0.1 * (index + 1)}s`}}
                 >
                   <div className="flex h-full flex-col">
-                    <div className="h-36 overflow-hidden">
+                    <div className="h-28 md:h-36 overflow-hidden">
                       <img 
                         src={article.coverImage} 
                         alt={article.title} 
                         className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       />
                     </div>
-                    <div className="p-4 flex-1 flex flex-col">
+                    <div className="p-3 md:p-4 flex-1 flex flex-col">
                       <span className="text-xs font-medium text-journal-blue mb-1">
                         {article.category}
                       </span>
-                      <h3 className="font-bold text-md mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+                      <h3 className="font-bold text-sm md:text-md mb-1 md:mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
                         <Link to={`/materia/${article.id}`}>
                           {article.title}
                         </Link>
@@ -363,9 +412,9 @@ const Index = () => {
                         {article.excerpt}
                       </p>
                       <div className="flex items-center justify-between mt-auto">
-                        <span className="text-gray-500 text-sm">{article.date}</span>
+                        <span className="text-gray-500 text-xs md:text-sm">{article.date}</span>
                         <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
-                          <Link to={`/materia/${article.id}`} className="flex items-center gap-1">
+                          <Link to={`/materia/${article.id}`} className="flex items-center gap-1 text-xs md:text-sm">
                             Ler <ChevronRight className="h-3 w-3" />
                           </Link>
                         </Button>
@@ -377,10 +426,10 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="text-center mt-10">
+          <div className="text-center mt-6 md:mt-10">
             <Button asChild variant="outline" className="group">
               <Link to="/noticias" className="inline-flex items-center">
-                Ver mais matérias
+                Ver mais destaques
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -394,14 +443,15 @@ const Index = () => {
         articles={mockNewsArticles}
         categoryLink="/noticias"
         className="bg-gray-50"
+        layout={isMobile ? 'list' : 'grid'} 
       />
       
-      <section className="py-12">
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Entrevistas</h2>
-              <p className="text-gray-600">Conversas com pessoas inspiradoras da nossa comunidade</p>
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">Entrevistas</h2>
+              <p className="text-gray-600 text-sm md:text-base">Conversas com pessoas inspiradoras da nossa comunidade</p>
             </div>
             <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
               <Link to="/entrevistas" className="flex items-center">
@@ -411,39 +461,40 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {/* Modified to display 3 interviews per row instead of 2 */}
             {mockInterviewArticles.map((article, index) => (
               <div key={article.id} 
-                className={`flex flex-col md:flex-row gap-4 bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-4 
+                className={`flex flex-col bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-3 md:p-4 
                 ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} 
                 style={{animationDelay: `${0.1 * (index + 1)}s`}}
               >
-                <div className="w-full md:w-2/5 h-48 md:h-auto overflow-hidden rounded-lg">
+                <div className="w-full h-40 overflow-hidden rounded-lg mb-3">
                   <img 
                     src={article.coverImage} 
                     alt={article.title} 
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
                 </div>
-                <div className="w-full md:w-3/5 flex flex-col justify-between">
+                <div className="flex flex-col justify-between flex-1">
                   <div>
                     <span className="inline-block bg-journal-blue/10 text-journal-blue text-xs font-medium px-2.5 py-0.5 rounded mb-2">
                       {article.category}
                     </span>
-                    <h3 className="font-bold text-xl mb-2 hover:text-journal-blue transition-colors">
+                    <h3 className="font-bold text-sm md:text-base mb-2 hover:text-journal-blue transition-colors line-clamp-2">
                       <Link to={`/materia/${article.id}`}>
                         {article.title}
                       </Link>
                     </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-xs mb-3 line-clamp-2">
                       {article.excerpt}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-gray-500 text-sm">{article.date}</span>
-                    <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10">
-                      <Link to={`/materia/${article.id}`} className="flex items-center gap-1">
-                        Ler entrevista <ChevronRight className="h-4 w-4" />
+                    <span className="text-gray-500 text-xs">{article.date}</span>
+                    <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
+                      <Link to={`/materia/${article.id}`} className="flex items-center gap-1 text-xs">
+                        Ler entrevista <ChevronRight className="h-3 w-3" />
                       </Link>
                     </Button>
                   </div>
@@ -460,81 +511,7 @@ const Index = () => {
         articles={mockEntertainmentArticles}
         categoryLink="/entretenimento"
         className="bg-gray-50"
+        layout={isMobile ? 'list' : 'grid'} 
       />
       
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Curiosidades</h2>
-              <p className="text-gray-600">Descobertas interessantes do mundo do conhecimento</p>
-            </div>
-            <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
-              <Link to="/curiosidades" className="flex items-center">
-                Ver todas
-                <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {mockCuriosityArticles.map((article) => (
-              <div 
-                key={article.id}
-                className={cn(
-                  "transition-all duration-300 overflow-hidden rounded-xl cursor-pointer shadow-md hover:shadow-lg",
-                  expandedCuriosity === article.id ? "col-span-2 row-span-2" : ""
-                )}
-                onClick={() => toggleCuriosity(article.id)}
-              >
-                <div className="relative h-full">
-                  <img 
-                    src={article.coverImage} 
-                    alt={article.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3">
-                    <div className="flex flex-col h-full justify-end">
-                      <h3 className="text-white font-bold text-sm md:text-base mb-1">
-                        {article.title}
-                      </h3>
-                      {expandedCuriosity === article.id && (
-                        <div className="animate-fade-in">
-                          <p className="text-white/90 text-xs md:text-sm mb-2">
-                            {article.excerpt}
-                          </p>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            asChild 
-                            className="mt-2 bg-white/20 backdrop-blur-sm text-white border-white/40 hover:bg-white/30"
-                          >
-                            <Link to={`/materia/${article.id}`}>
-                              Ler mais
-                            </Link>
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      <section id="newsletter" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <NewsletterSubscribe />
-          </div>
-        </div>
-      </section>
-      
-      <Footer />
-    </main>
-  );
-};
-
-export default Index;
+      <section className="py-

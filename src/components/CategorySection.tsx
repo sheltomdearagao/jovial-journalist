@@ -36,12 +36,12 @@ const CategorySection = ({
   if (articles.length === 0) return null;
 
   return (
-    <section className={cn('py-12', className)}>
+    <section className={cn('py-8 md:py-12', className)}>
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{title}</h2>
-            {subtitle && <p className="text-gray-600">{subtitle}</p>}
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">{title}</h2>
+            {subtitle && <p className="text-gray-600 text-sm md:text-base">{subtitle}</p>}
           </div>
           <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue mt-2 md:mt-0 group">
             <Link to={categoryLink} className="flex items-center">
@@ -52,13 +52,13 @@ const CategorySection = ({
         </div>
 
         {layout === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {articles.map((article) => (
               <ArticleCard key={article.id} {...article} />
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {articles.map((article) => (
               <ArticleCard key={article.id} {...article} minimal />
             ))}
