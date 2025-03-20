@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -183,6 +184,7 @@ const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [expandedCuriosity, setExpandedCuriosity] = useState<string | null>(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [curiosityCarouselIndex, setCuriosityCarouselIndex] = useState(0);
   const isMobile = useIsMobile();
 
   // Mock curiosity articles expanded with more items for carousel
@@ -234,7 +236,15 @@ const Index = () => {
       setFeaturedIndex(prev => (prev + 1) % mockFeaturedArticles.length);
     }, 5000); // Change featured article every 5 seconds
     
-    return () => clearInterval(featuredInterval);
+    // Setup carousel rotation for curiosity articles
+    const curiosityInterval = setInterval(() => {
+      setCuriosityCarouselIndex(prev => (prev + 1) % mockCuriosityArticlesExpanded.length);
+    }, 3000); // Change curiosity article every 3 seconds
+    
+    return () => {
+      clearInterval(featuredInterval);
+      clearInterval(curiosityInterval);
+    };
   }, []);
 
   const heroStyle = {
@@ -514,4 +524,71 @@ const Index = () => {
         layout={isMobile ? 'list' : 'grid'} 
       />
       
-      <section className="py-
+      {/* Curiosity carousel section */}
+      <section className="py-8 md:py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <div>
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">Curiosidades</h2>
+              <p className="text-gray-600 text-sm md:text-base">Aprendendo de forma divertida</p>
+            </div>
+            <Button variant="ghost" asChild className="text-journal-blue hover:text-journal-darkBlue group">
+              <Link to="/curiosidades" className="flex items-center">
+                Ver todas
+                <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+          
+          <Carousel className="w-full">
+            <CarouselContent>
+              {mockCuriosityArticlesExpanded.map((article, index) => (
+                <CarouselItem key={article.id} className="md:basis-1/3 lg:basis-1/6">
+                  <div 
+                    className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all h-full
+                    ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`}
+                    style={{animationDelay: `${0.1 * (index + 1)}s`}}
+                  >
+                    <div className="h-40 overflow-hidden rounded-t-xl">
+                      <img 
+                        src={article.coverImage} 
+                        alt={article.title} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <span className="inline-block bg-journal-yellow/10 text-journal-darkBlue text-xs font-medium px-2.5 py-0.5 rounded mb-2">
+                        {article.category}
+                      </span>
+                      <h3 className="font-bold text-sm md:text-base mb-2 line-clamp-2 hover:text-journal-blue transition-colors">
+                        <Link to={`/materia/${article.id}`}>
+                          {article.title}
+                        </Link>
+                      </h3>
+                      <p className="text-gray-600 text-xs line-clamp-2 mb-3">
+                        {article.excerpt}
+                      </p>
+                      <Button asChild variant="ghost" size="sm" className="text-journal-blue hover:bg-journal-blue/10 p-0 h-auto">
+                        <Link to={`/materia/${article.id}`} className="flex items-center gap-1 text-xs">
+                          Ler mais <ChevronRight className="h-3 w-3" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+        </div>
+      </section>
+      
+      <NewsletterSubscribe />
+      
+      <Footer />
+    </main>
+  );
+};
+
+export default Index;

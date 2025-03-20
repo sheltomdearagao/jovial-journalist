@@ -23,6 +23,7 @@ interface CategorySectionProps {
   categoryLink: string;
   className?: string;
   layout?: 'grid' | 'list';
+  columns?: 2 | 3 | 4;
 }
 
 const CategorySection = ({
@@ -32,8 +33,16 @@ const CategorySection = ({
   categoryLink,
   className,
   layout = 'grid',
+  columns = 4,
 }: CategorySectionProps) => {
   if (articles.length === 0) return null;
+
+  // Define grid classes based on the number of columns
+  const gridCols = {
+    2: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2',
+    3: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+    4: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+  };
 
   return (
     <section className={cn('py-8 md:py-12', className)}>
@@ -52,7 +61,7 @@ const CategorySection = ({
         </div>
 
         {layout === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className={cn('grid gap-4 md:gap-6', gridCols[columns])}>
             {articles.map((article) => (
               <ArticleCard key={article.id} {...article} />
             ))}
