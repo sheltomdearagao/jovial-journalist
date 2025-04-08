@@ -1,23 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Save, Upload, Image, Clock, Calendar, Trash } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import RichTextEditor from '@/components/RichTextEditor';
-import { Checkbox } from '@/components/ui/checkbox';
+
+// Componentes refatorados
+import ArticleHeader from '@/components/article/ArticleHeader';
+import ArticleForm from '@/components/article/ArticleForm';
+import CoverImageUpload from '@/components/article/CoverImageUpload';
+import PublicationSettings from '@/components/article/PublicationSettings';
 
 const ArticleEditor = () => {
   const { id } = useParams();
@@ -131,239 +122,50 @@ const ArticleEditor = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="mr-2 text-gray-600"
-            >
-              <Link to="/redacao">
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-            </Button>
-            <h1 className="text-xl font-bold text-gray-900">
-              {isEditMode ? 'Editar Matéria' : 'Nova Matéria'}
-            </h1>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <Button 
-              variant="outline" 
-              className="hidden sm:flex"
-              onClick={() => navigate('/redacao')}
-            >
-              Cancelar
-            </Button>
-            
-            <Button 
-              onClick={handleSubmit}
-              disabled={isSaving}
-              className="bg-journal-blue hover:bg-journal-darkBlue"
-            >
-              {isSaving ? (
-                <>
-                  <Save className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Salvar
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </header>
+      <ArticleHeader 
+        isEditMode={isEditMode}
+        isSaving={isSaving}
+        onSave={handleSubmit}
+      />
       
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Editor */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Label htmlFor="title" className="text-base font-medium mb-2 block">
-                    Título <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Digite o título da matéria"
-                    className="text-lg"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="excerpt" className="text-base font-medium mb-2 block">
-                    Resumo/Subtítulo <span className="text-red-500">*</span>
-                  </Label>
-                  <Textarea
-                    id="excerpt"
-                    value={excerpt}
-                    onChange={(e) => setExcerpt(e.target.value)}
-                    placeholder="Digite um breve resumo da matéria"
-                    className="resize-none"
-                    rows={3}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="authors" className="text-base font-medium mb-2 block">
-                    Autores <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="authors"
-                    value={authors}
-                    onChange={(e) => setAuthors(e.target.value)}
-                    placeholder="Digite os nomes dos autores (separados por vírgula)"
-                    className="text-base"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label className="text-base font-medium mb-2 block">
-                    Lide e Corpo do texto <span className="text-red-500">*</span>
-                  </Label>
-                  <RichTextEditor
-                    value={content}
-                    onChange={setContent}
-                    placeholder="Comece a escrever sua matéria aqui..."
-                  />
-                </div>
-              </form>
-            </div>
+            <ArticleForm 
+              title={title}
+              setTitle={setTitle}
+              excerpt={excerpt}
+              setExcerpt={setExcerpt}
+              authors={authors}
+              setAuthors={setAuthors}
+              content={content}
+              setContent={setContent}
+              onSubmit={handleSubmit}
+            />
           </div>
           
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Imagem de capa */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Imagem de Capa</h2>
-              
-              {coverImage ? (
-                <div className="space-y-3">
-                  <div className="relative rounded-md overflow-hidden group">
-                    <img
-                      src={coverImage}
-                      alt="Imagem de capa"
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button 
-                        variant="secondary" 
-                        size="sm"
-                        onClick={handleImageUpload}
-                        className="mr-2"
-                      >
-                        <Image className="mr-1 h-4 w-4" />
-                        Alterar
-                      </Button>
-                      <Button 
-                        variant="destructive" 
-                        size="sm"
-                        onClick={() => setCoverImage('')}
-                      >
-                        <Trash className="mr-1 h-4 w-4" />
-                        Remover
-                      </Button>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500 italic">
-                    Clique na imagem para alterar ou remover
-                  </p>
-                </div>
-              ) : (
-                <Button 
-                  variant="outline" 
-                  className="w-full h-40 border-dashed flex flex-col items-center justify-center"
-                  onClick={handleImageUpload}
-                >
-                  <Image className="h-8 w-8 text-gray-400 mb-2" />
-                  <span className="text-gray-500">Clique para adicionar uma imagem</span>
-                </Button>
-              )}
-            </div>
+            <CoverImageUpload 
+              coverImage={coverImage}
+              onImageUpload={handleImageUpload}
+              onImageRemove={() => setCoverImage('')}
+            />
             
             {/* Publicação */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Publicação</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="category" className="text-sm font-medium mb-1 block">
-                    Categoria <span className="text-red-500">*</span>
-                  </Label>
-                  <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Selecione uma categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="featured" 
-                    checked={isFeatured}
-                    onCheckedChange={(checked) => setIsFeatured(checked as boolean)} 
-                  />
-                  <Label htmlFor="featured" className="text-sm font-medium cursor-pointer">
-                    Destaque na página inicial
-                  </Label>
-                </div>
-                
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">
-                    Status
-                  </Label>
-                  <RadioGroup value={status} onValueChange={setStatus} className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="draft" id="draft" />
-                      <Label htmlFor="draft" className="text-sm cursor-pointer">Rascunho</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="review" id="review" />
-                      <Label htmlFor="review" className="text-sm cursor-pointer">Em Revisão</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="published" id="published" />
-                      <Label htmlFor="published" className="text-sm cursor-pointer">Publicado</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-                
-                <div>
-                  <p className="text-sm font-medium mb-1">Informações</p>
-                  <div className="text-xs text-gray-600 space-y-1">
-                    <div className="flex items-center">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      <span>Criado em: {new Date().toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      <span>Última edição: {new Date().toLocaleTimeString()}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="font-medium">Autor:</span>
-                      <span className="ml-1">{user?.name}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <PublicationSettings 
+              category={category}
+              setCategory={setCategory}
+              isFeatured={isFeatured}
+              setIsFeatured={setIsFeatured}
+              status={status}
+              setStatus={setStatus}
+              userName={user?.name}
+              categories={categories}
+            />
           </div>
         </div>
       </div>
