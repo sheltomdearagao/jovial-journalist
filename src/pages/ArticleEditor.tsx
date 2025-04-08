@@ -34,6 +34,7 @@ const ArticleEditor = () => {
   const [coverImage, setCoverImage] = useState('');
   const [status, setStatus] = useState('draft');
   const [isFeatured, setIsFeatured] = useState(false);
+  const [authors, setAuthors] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -66,6 +67,7 @@ const ArticleEditor = () => {
         setCoverImage('https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80');
         setStatus('published');
         setIsFeatured(true);
+        setAuthors('Maria Silva, João Santos');
         setIsLoading(false);
       }, 1000);
     }
@@ -209,6 +211,20 @@ const ArticleEditor = () => {
                     placeholder="Digite um breve resumo da matéria"
                     className="resize-none"
                     rows={3}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="authors" className="text-base font-medium mb-2 block">
+                    Autores <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="authors"
+                    value={authors}
+                    onChange={(e) => setAuthors(e.target.value)}
+                    placeholder="Digite os nomes dos autores (separados por vírgula)"
+                    className="text-base"
                     required
                   />
                 </div>

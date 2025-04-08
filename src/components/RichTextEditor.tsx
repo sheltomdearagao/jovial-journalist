@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Bold, Italic, Underline, List, ListOrdered, Link, Image, 
-  AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, 
+  AlignLeft, AlignCenter, AlignRight, AlignJustify, Heading1, Heading2, 
   Quote, Code, Undo, Redo, FileVideo
 } from 'lucide-react';
 
@@ -24,13 +23,9 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
     setIsEmpty(value === '');
   }, [value]);
 
-  // Esta é uma implementação simplificada. Em uma aplicação real,
-  // você usaria uma biblioteca como Quill, TinyMCE, Draft.js, etc.
   const handleButtonClick = (command: string, value?: string) => {
-    // Simulação de implementação - em uma app real, isso seria mais sofisticado
     document.execCommand(command, false, value);
 
-    // Capturar o HTML atual do editor
     const editorContent = document.querySelector('.editor-content');
     if (editorContent) {
       onChange(editorContent.innerHTML);
@@ -166,6 +161,15 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
             >
               <AlignRight className="h-4 w-4" />
             </Button>
+            <Button 
+              type="button" 
+              size="icon" 
+              variant="ghost" 
+              className="h-8 w-8"
+              onClick={() => handleButtonClick('justifyFull')}
+            >
+              <AlignJustify className="h-4 w-4" />
+            </Button>
             <Separator orientation="vertical" className="mx-1 h-6" />
             <Button 
               type="button" 
@@ -199,7 +203,6 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
               onClick={() => {
                 const url = prompt('Insira o URL do vídeo (YouTube, Vimeo):');
                 if (url) {
-                  // Embed iframe para vídeos
                   const iframe = `<div class="video-container"><iframe width="560" height="315" src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                   document.execCommand('insertHTML', false, iframe);
                 }
