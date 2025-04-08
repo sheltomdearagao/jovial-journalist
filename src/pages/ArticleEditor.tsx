@@ -103,6 +103,11 @@ const ArticleEditor = () => {
     }
   };
   
+  // Handler function for the save button that doesn't take parameters
+  const handleSave = () => {
+    handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
+  
   const handleImageUpload = () => {
     // Em uma aplicação real, aqui abriríamos um input de arquivo e faríamos upload
     const imageUrl = prompt('Por favor, insira a URL da imagem:');
@@ -125,7 +130,7 @@ const ArticleEditor = () => {
       <ArticleHeader 
         isEditMode={isEditMode}
         isSaving={isSaving}
-        onSave={handleSubmit}
+        onSave={handleSave}
       />
       
       {/* Content */}
