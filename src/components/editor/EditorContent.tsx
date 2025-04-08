@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 
 interface EditorContentProps {
   value: string;
-  onInput: (e: React.FormEvent<HTMLDivElement>) => void;
+  onInput: (content: string) => void;
   placeholder?: string;
   isEmpty: boolean;
 }
@@ -18,14 +18,18 @@ const EditorContent = ({ value, onInput, placeholder = 'Comece a digitar...', is
     }
   }, [value]);
 
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.innerHTML;
+    onInput(newContent);
+  };
+
   return (
     <div className="relative min-h-[400px]">
       <div
         ref={contentRef}
         className="editor-content w-full min-h-[400px] p-4 overflow-auto focus:outline-none"
         contentEditable={true}
-        dangerouslySetInnerHTML={{ __html: value }}
-        onInput={onInput}
+        onInput={handleInput}
       />
       {isEmpty && (
         <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
