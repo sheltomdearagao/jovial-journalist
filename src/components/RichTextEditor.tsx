@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EditorControls from './editor/EditorControls';
 import EditorContent from './editor/EditorContent';
@@ -15,6 +15,7 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
   const [previewHtml, setPreviewHtml] = useState<string>('');
   const [isEmpty, setIsEmpty] = useState(value === '');
   const [editorContent, setEditorContent] = useState(value);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   
   // Sincronizar o estado interno com o valor passado por props
   useEffect(() => {
@@ -24,7 +25,6 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
 
   useEffect(() => {
     // Atualizar o valor externo apenas quando o conteúdo interno mudar
-    // e for diferente do valor atual
     if (editorContent !== value) {
       onChange(editorContent);
     }
@@ -33,9 +33,13 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
   const handleCommandExecution = (command: string, value?: string) => {
     document.execCommand(command, false, value);
 
+    // Após executar o comando, capturar o conteúdo atualizado
     const editableContent = document.querySelector('.editor-content');
     if (editableContent) {
-      setEditorContent(editableContent.innerHTML);
+      const newContent = editableContent.innerHTML;
+      setEditorContent(newContent);
+      setIsEmpty(newContent === '' || newContent === '<br>');
+      onChange(newContent); // Propagar a mudança para o componente pai imediatamente
     }
   };
 
@@ -48,6 +52,7 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
     const content = e.currentTarget.innerHTML;
     setEditorContent(content);
     setIsEmpty(content === '' || content === '<br>');
+    onChange(content); // Propagar a mudança para o componente pai imediatamente
   };
 
   return (
