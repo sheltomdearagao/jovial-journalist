@@ -14,28 +14,39 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
   const [tab, setTab] = useState<string>('editar');
   const [previewHtml, setPreviewHtml] = useState<string>('');
   const [isEmpty, setIsEmpty] = useState(value === '');
-
+  const [editorContent, setEditorContent] = useState(value);
+  
+  // Sincronizar o estado interno com o valor passado por props
   useEffect(() => {
+    setEditorContent(value);
     setIsEmpty(value === '');
   }, [value]);
 
+  useEffect(() => {
+    // Atualizar o valor externo apenas quando o conteúdo interno mudar
+    // e for diferente do valor atual
+    if (editorContent !== value) {
+      onChange(editorContent);
+    }
+  }, [editorContent, onChange, value]);
+  
   const handleCommandExecution = (command: string, value?: string) => {
     document.execCommand(command, false, value);
 
-    const editorContent = document.querySelector('.editor-content');
-    if (editorContent) {
-      onChange(editorContent.innerHTML);
+    const editableContent = document.querySelector('.editor-content');
+    if (editableContent) {
+      setEditorContent(editableContent.innerHTML);
     }
   };
 
   const handlePreviewTab = () => {
-    setPreviewHtml(value);
+    setPreviewHtml(editorContent);
     setTab('preview');
   };
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const content = e.currentTarget.innerHTML;
-    onChange(content);
+    setEditorContent(content);
     setIsEmpty(content === '' || content === '<br>');
   };
 
@@ -56,7 +67,7 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Comece a digitar...' }
         <TabsContent value="editar" className="mt-0">
           <EditorControls onCommand={handleCommandExecution} />
           <EditorContent 
-            value={value} 
+            value={editorContent} 
             onInput={handleInput} 
             placeholder={placeholder}
             isEmpty={isEmpty}

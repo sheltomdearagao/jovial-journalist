@@ -45,9 +45,39 @@ const ArticleEditor = () => {
     'Eventos',
   ];
   
+  // Local storage key para salvar os dados temporariamente
+  const getStorageKey = () => isEditMode ? `article_${id}` : 'article_draft';
+  
+  // Carregar os dados do localStorage ou do servidor
   useEffect(() => {
+    setIsLoading(true);
+    
+    // Verificar se há dados salvos no localStorage
+    const savedData = localStorage.getItem(getStorageKey());
+    
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setTitle(parsedData.title || '');
+        setExcerpt(parsedData.excerpt || '');
+        setContent(parsedData.content || '');
+        setCategory(parsedData.category || '');
+        setCoverImage(parsedData.coverImage || '');
+        setStatus(parsedData.status || 'draft');
+        setIsFeatured(parsedData.isFeatured || false);
+        setAuthors(parsedData.authors || '');
+        setIsLoading(false);
+        
+        console.log('Dados carregados do localStorage:', parsedData);
+        return;
+      } catch (error) {
+        console.error('Erro ao carregar dados do localStorage:', error);
+      }
+    }
+    
+    // Se não houver dados no localStorage e estiver em modo de edição,
+    // carregamos os dados simulados como antes
     if (isEditMode) {
-      setIsLoading(true);
       // Simular carregamento de dados
       setTimeout(() => {
         // Em uma aplicação real, aqui buscaríamos os dados da matéria do banco de dados
@@ -61,8 +91,46 @@ const ArticleEditor = () => {
         setAuthors('Maria Silva, João Santos');
         setIsLoading(false);
       }, 1000);
+    } else {
+      setIsLoading(false);
     }
-  }, [isEditMode]);
+  }, [isEditMode, id]);
+  
+  // Função para salvar os dados no localStorage
+  const saveToLocalStorage = () => {
+    const articleData = {
+      title,
+      excerpt,
+      content,
+      category,
+      coverImage,
+      status,
+      isFeatured,
+      authors,
+      lastSaved: new Date().toISOString()
+    };
+    
+    try {
+      localStorage.setItem(getStorageKey(), JSON.stringify(articleData));
+      console.log('Dados salvos no localStorage:', articleData);
+      return true;
+    } catch (error) {
+      console.error('Erro ao salvar dados no localStorage:', error);
+      return false;
+    }
+  };
+  
+  // Salvamento automático a cada 30 segundos
+  useEffect(() => {
+    const autoSaveInterval = setInterval(() => {
+      if (title || content) {
+        saveToLocalStorage();
+        console.log('Salvamento automático realizado');
+      }
+    }, 30000);
+    
+    return () => clearInterval(autoSaveInterval);
+  }, [title, excerpt, content, category, coverImage, status, isFeatured, authors]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +147,14 @@ const ArticleEditor = () => {
     setIsSaving(true);
     
     try {
-      // Simulando salvamento
+      // Salvar no localStorage
+      const saved = saveToLocalStorage();
+      
+      if (!saved) {
+        throw new Error('Falha ao salvar os dados');
+      }
+      
+      // Simulando salvamento no servidor
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast({
